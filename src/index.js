@@ -25,14 +25,33 @@ function getToys(){
   .then(allToys => iterateToys(allToys))
 }
 
+function iterateToys(allToys){
+  for (toy of allToys){
+    makeToyCard(toy)
+  }
+  console.log(allToys)
+}
+
 function makeToyCard(toy){
   const collectionDiv = document.getElementById("toy-collection")
+  const parentDiv = document.createElement('div')
+  parentDiv.setAttribute('class', 'card')
+  toyDiv =
+  `<h2>${toy.name}</h2>
+  <img src=${toy.image} class="toy-avatar" />
+  <p> ${toy.likes} </p>
+  <button class="like-btn">Like <3</button>`
+  
+  parentDiv.innerHTML = toyDiv
+  parentDiv.setAttribute('data-id', toy.id)
+  collectionDiv.appendChild(parentDiv)
+  const button = parentDiv.querySelector("button.like-btn")
+  button.addEventListener("click", addLike)
+
   // const toyDiv = document.createElement('div')
   // const h2 = document.createElement('h2')
   // const img = document.createElement('img')
   // const p = document.createElement('p')
-  // const button = document.createElement('button')
-  // button.addEventListener("click", addLike)
 
   // h2.innerText = toy.name
   // img.setAttribute('src', toy.image)
@@ -42,28 +61,10 @@ function makeToyCard(toy){
   // button.innerText = 'Like <3'
   // button.setAttribute('class', 'like-btn')
   // toyDiv.setAttribute('class', 'card')
-  // toyDiv.setAttribute('data-id', toy.id)
   
   // toyDiv.append(h2, img, p, button)
-  const parentDiv = document.createElement('div')
-  parentDiv.setAttribute('class', 'card')
-  toyDiv =
-  `<h2>${toy.name}</h2>
-  <img src=${toy.image} class="toy-avatar" />
-  <p> ${0} </p>
-  <button class="like-btn">Like <3</button>`
-  
-  parentDiv.innerHTML = toyDiv
-  collectionDiv.appendChild(parentDiv)
-  
 }
 
-function iterateToys(allToys){
-  for (toy of allToys){
-    makeToyCard(toy)
-  }
-  // console.log(allToys)
-}
 
 function addNewToy(e){
   let configObj = {
@@ -88,7 +89,8 @@ function addNewToy(e){
 
 function addLike(e){
   const id = e.target.parentNode.dataset.id
-  const likeCount = e.target.previousSibling
+  const likeCount = e.target.previousElementSibling
+  // debugger
   // console.log(id)
   let configObj = {
     method: "PATCH",
@@ -97,10 +99,10 @@ function addLike(e){
       "Accept": "application/json"
     },
     body: JSON.stringify({
-      "likes": +likeCount.innerText+1
+      "likes": + likeCount.innerText+1
   })
 }
   fetch(url + `/${id}`, configObj)
 
-  likeCount.innerText++
+  +likeCount.innerText++
 }
